@@ -1,0 +1,10 @@
+# Environment
+.env
+config_*_local.yaml
+
+# Credentials
+*.key
+*.pem
+
+# Data
+/data/
