@@ -1,0 +1,14 @@
+# Messaging
+kafka-python==2.0.2
+
+# Database
+psycopg2-binary==2.9.9
+
+# Spark
+pyspark==3.5.1
+
+# Testing (for later)
+pytest==8.3.2
+
+# Logging and configuration
+python-dotenv==1.0.1

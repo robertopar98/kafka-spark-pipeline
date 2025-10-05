@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    key VARCHAR(50),
+    value TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

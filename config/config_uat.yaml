@@ -1,0 +1,12 @@
+env: uat
+kafka:
+  bootstrap_servers: "kafka-uat.example.com:9092"
+  topic: "test-topic-uat"
+
+database:
+  warehouse_type: "postgres"
+  host: "uat-db.example.com"
+  port: 5432
+  database: "dw_uat"
+  user: "${DB_USER}"
+  password: "${DB_PASS}"
