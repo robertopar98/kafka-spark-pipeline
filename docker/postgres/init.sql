@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS kafka_data (
-    id SERIAL PRIMARY KEY,
-    key VARCHAR(100),
-    value JSONB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
