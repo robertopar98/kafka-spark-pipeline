@@ -25,6 +25,7 @@ Thumbs.db
 *.sock
 docker/*.log
 docker/tmp/
+docker/postgres/data/
 
 # Spark
 metastore_db/
