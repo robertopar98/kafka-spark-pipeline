@@ -1,10 +1,54 @@
-# Environment
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
 .env
-config_*_local.yaml
+.env.*
+*.log
+*.db
+*.sqlite3
 
-# Credentials
-*.key
-*.pem
+# Jupyter
+.ipynb_checkpoints/
 
-# Data
-/data/
+# VSCode / PyCharm
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.sock
+docker/*.log
+docker/tmp/
+
+# Spark
+metastore_db/
+derby.log
+spark-warehouse/
+*.crc
+*.parquet.crc
+logs/
+
+# Test / Coverage
+.coverage
+htmlcov/
+pytest_cache/
+.tox/
+nosetests.xml
+junit.xml
+
+# GitHub workflows
+.github/workflows/*.tmp
+
+# Build
+build/
+dist/
+
+# Misc
+*.bak
+*.tmp
