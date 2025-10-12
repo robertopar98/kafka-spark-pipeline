@@ -1,35 +1,33 @@
-from kafka import KafkaProducer
+import os
 import json
 import time
 import random
+from kafka import KafkaProducer
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv(dotenv_path=".env.dev")
+
+KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:9092")
+KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "test-topic")
 
 def create_producer():
-    """Initialize a Kafka producer."""
+    """Initialize Kafka producer."""
     producer = KafkaProducer(
-        bootstrap_servers="kafka:9092",
-        value_serializer=lambda v: json.dumps(v).encode("utf-8")  # convert dict → JSON → bytes
+        bootstrap_servers=KAFKA_BROKER,
+        value_serializer=lambda v: json.dumps(v).encode("utf-8")
     )
     return producer
 
-def send_messages(producer, topic="test-topic"):
-    """Send sample messages to Kafka."""
-    print(f"Producing messages to topic '{topic}'... (Ctrl+C to stop)")
-
-    try:
-        while True:
-            message = {
-                "event_id": random.randint(1, 1000),
-                "value": random.random(),
-                "timestamp": time.time(),
-            }
-            producer.send(topic, message)
-            print("Sent:", message)
-            time.sleep(2)
-    except KeyboardInterrupt:
-        print("Stopped producing.")
-    finally:
-        producer.close()
+def send_random_messages(producer, topic=KAFKA_TOPIC):
+    """Send random test messages to Kafka."""
+    for i in range(10):
+        message = {"event_id": i, "value": random.random(), "timestamp": time.time()}
+        producer.send(topic, value=message)
+        print(f"Sent: {message}")
+        time.sleep(1)
 
 if __name__ == "__main__":
     producer = create_producer()
-    send_messages(producer)
+    send_random_messages(producer)
+    producer.flush()
