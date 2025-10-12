@@ -12,3 +12,7 @@ pytest==8.3.2
 
 # Logging and configuration
 python-dotenv==1.0.1
+
+pydantic==2.9.2
+
+confluent-kafka==2.3.0
