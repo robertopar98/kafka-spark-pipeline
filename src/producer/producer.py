@@ -1,33 +1,49 @@
-import os
+from confluent_kafka import Producer
 import json
 import time
-import random
-from kafka import KafkaProducer
-from dotenv import load_dotenv
+from pydantic import BaseModel
+import os
 
-# Load environment variables
-load_dotenv(dotenv_path=".env.dev")
+# Example Pydantic message schema
+class TransactionMessage(BaseModel):
+    id: int
+    user: str
+    amount: float
+    timestamp: float
 
-KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:9092")
-KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "test-topic")
+def delivery_report(err, msg):
+    """Callback for message delivery reports"""
+    if err is not None:
+        print(f"❌ Delivery failed for record {msg.key()}: {err}")
+    else:
+        print(f"✅ Message delivered to {msg.topic()} [{msg.partition()}] at offset {msg.offset()}")
 
 def create_producer():
-    """Initialize Kafka producer."""
-    producer = KafkaProducer(
-        bootstrap_servers=KAFKA_BROKER,
-        value_serializer=lambda v: json.dumps(v).encode("utf-8")
-    )
-    return producer
+    conf = {
+        "bootstrap.servers": os.getenv("KAFKA_BROKER", "kafka:9092"),
+    }
+    return Producer(conf)
 
-def send_random_messages(producer, topic=KAFKA_TOPIC):
-    """Send random test messages to Kafka."""
-    for i in range(10):
-        message = {"event_id": i, "value": random.random(), "timestamp": time.time()}
-        producer.send(topic, value=message)
-        print(f"Sent: {message}")
+def run_producer(topic="customer_events"):
+    producer = create_producer()
+
+    for i in range(5):
+        message = TransactionMessage(
+            id=i,
+            user=f"user_{i}",
+            amount=round(100.0 + i * 10, 2),
+            timestamp=time.time(),
+        )
+
+        producer.produce(
+            topic=topic,
+            key=str(message.id),
+            value=json.dumps(message.dict()).encode("utf-8"),
+            callback=delivery_report,
+        )
+
+        producer.flush()
         time.sleep(1)
 
 if __name__ == "__main__":
-    producer = create_producer()
-    send_random_messages(producer)
-    producer.flush()
+    run_producer()
